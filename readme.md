@@ -1,6 +1,6 @@
 # dolar container app
 
-A minimalistic app that exposes the USD > ARS echange rates (yeah, we have more than one ¯\_ (ツ)_/¯).
+A minimalistic app that exposes the USD > ARS echange rates (yeah, we have more than one `¯\_ (ツ)_/¯`).
 
 ## How to clone and deploy
 
