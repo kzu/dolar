@@ -1,0 +1,35 @@
+[file ".github/dependabot.yml"]
+	url = https://github.com/devlooped/oss/blob/main/.github/dependabot.yml
+	sha = 0683ee777d7d878d4bf013d7deea352685135a05
+	etag = 2fc8a0d2b47091b058ae3e1f68333492044b49a684621f4939a0bce5bff869d5
+	weak
+[file ".github/FUNDING.yml"]
+	url = https://github.com/devlooped/oss/blob/main/.github/FUNDING.yml
+	sha = 4c91539ec08a3f9c14ff1e8c6a7c4ae88795f5f1
+	etag = f4d02805592d1f86c29acc9da3a40e817fb3611d6ff0f6409f547137f38f65df
+	weak
+[file ".editorconfig"]
+	url = https://github.com/devlooped/oss/blob/main/.editorconfig
+	sha = 0683ee777d7d878d4bf013d7deea352685135a05
+	etag = 985aa022503959d35b03c870f07ae604cead7580d260775235ef6665aa9a6cbe
+	weak
+[file ".gitattributes"]
+	url = https://github.com/devlooped/oss/blob/main/.gitattributes
+	sha = 0683ee777d7d878d4bf013d7deea352685135a05
+	etag = 7acb32f5fa6d4ccd9c824605a7c2b8538497f0068c165567807d393dcf4d6bb7
+	weak
+[file ".gitignore"]
+	url = https://github.com/devlooped/oss/blob/main/.gitignore
+	sha = 978c71c6afd095eaba35097fd7deed44fa09aa91
+	etag = 2b49512f81b6cb44c4ee398975c0edf41bfa4137857b59770805fa7c5e49e94b
+	weak
+[file "dolar/System/Xml/XmlWrappingReader.cs"]
+	url = https://github.com/devlooped/catbag/blob/main/System/Xml/XmlWrappingReader.cs
+	sha = f7eac4f1ea38182a47579258934cf9f9982dd83c
+	etag = 203f3b4626a86d94e2057c2b2a5b5499c32298159c198dad4efded78bed6d498
+	weak
+[file "dolar/System/Xml/BaseUriXmlReader.cs"]
+	url = https://github.com/devlooped/catbag/blob/main/System/Xml/BaseUriXmlReader.cs
+	sha = f7eac4f1ea38182a47579258934cf9f9982dd83c
+	etag = edb1996ad69be75749a32d94535bdd819d1919ba06af0b0e15101e7090864429
+	weak
