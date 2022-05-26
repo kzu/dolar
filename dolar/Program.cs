@@ -39,7 +39,7 @@ app.MapGet("/{id}", async (string id, IHttpClientFactory http) =>
     if (!quotes!.ContainsKey(id))
         return Results.NotFound();
 
-    return Results.Ok(quotes[id]);
+    return Results.Ok(quotes[id].Price);
 });
 
 app.Run();
