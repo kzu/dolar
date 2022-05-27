@@ -5,9 +5,7 @@
 	weak
 [file ".github/FUNDING.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/FUNDING.yml
-	sha = 4c91539ec08a3f9c14ff1e8c6a7c4ae88795f5f1
-	etag = f4d02805592d1f86c29acc9da3a40e817fb3611d6ff0f6409f547137f38f65df
-	weak
+	etag = d34619c8c6cca21dc8ca89effe6ee80ce424dfb13a7e9a25db869c468e545e56
 [file ".editorconfig"]
 	url = https://github.com/devlooped/oss/blob/main/.editorconfig
 	sha = 0683ee777d7d878d4bf013d7deea352685135a05
