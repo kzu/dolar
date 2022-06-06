@@ -1,7 +1,10 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
 using System.Net;
 using System.Text.Json.Serialization;
 using Devlooped.Xml.Css;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Playwright;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,13 @@ builder.Services.AddHttpClient("http")
                 Proxy = null
             })));
 
+builder.Services.AddSingleton((_) => Playwright.CreateAsync().Result);
+builder.Services.AddSingleton((services) => services.GetRequiredService<IPlaywright>().Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+{
+    ExecutablePath = Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native", "chrome"),
+    Headless = true,
+}).Result);
+
 var app = builder.Build();
 
 app.UseRouting();
@@ -28,6 +38,32 @@ app.MapGet("/", async (IHttpClientFactory http) =>
         return Results.StatusCode((int)status);
 
     return Results.Ok(quotes!);
+});
+
+app.MapGet("deps", () =>
+{
+    // List chromium dependencies to see if they are satisfied.
+    var proc = Process.Start(new ProcessStartInfo("ldd", "./chrome")
+    {
+        RedirectStandardOutput = true,
+        WorkingDirectory = Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native")
+    });
+
+    proc?.WaitForExit();
+    return proc?.StandardOutput.ReadToEnd();
+});
+
+app.MapGet("/clarius", async ([FromServices] IBrowser browser) =>
+{
+    // Showcase how to navigate a page using chromium and get its HTML
+    var page = await browser.NewPageAsync();
+    await page.GotoAsync("https://clarius.org", new PageGotoOptions
+    {
+        Timeout = 0,
+        WaitUntil = WaitUntilState.NetworkIdle
+    });
+
+    return Results.Content("<html>" + await page.InnerHTMLAsync("body") + "</html>", "text/html; charset=UTF-8");
 });
 
 app.MapGet("/{id}", async (string id, IHttpClientFactory http) =>
