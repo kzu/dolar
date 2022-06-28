@@ -48,7 +48,7 @@ app.MapGet("/", async (IHttpClientFactory http, HttpContext context) =>
     }
     else if (id != null)
     {
-        return Results.Ok(quote.Price);
+        return Results.Ok(quote!.Price);
     }
 
     return Results.Ok(quotes);
