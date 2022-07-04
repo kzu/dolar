@@ -22,7 +22,6 @@ since that gives you the most control over the entire deployment.
        az account set --subscription <subscription-id>
        az account set --subscription <subscription-id>
        az MEP set --subscription <subscription-id>
-CCL
        ``` 
        To lookup the subscription id:
        ```
