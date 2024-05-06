@@ -77,22 +77,22 @@ async Task<(HttpStatusCode, Dictionary<string, Quote>?)> GetQuotesAsync(HttpClie
 
     response.EnsureSuccessStatusCode();
     var doc = await response.Content.ReadAsDocumentAsync();
-    var exchange = doc.CssSelectElement(".excbar");
+    var exchange = doc.CssSelectElement(".exchange-dolar-container");
     if (exchange == null)
         return (HttpStatusCode.NotFound, default);
 
-    var quotes = exchange.CssSelectElements("a")
+    var quotes = exchange.CssSelectElements(".exchange-dolar-item")
         .Select(x => new
         {
-            title = x.CssSelectElement("p.exc-tit")?.Value.Replace("\"", ""),
-            value = double.Parse(x.CssSelectElement("p.exc-val")?.Value ?? "0", NumberStyles.AllowDecimalPoint),
-            url = x.CssSelectElement("p.exc-tit")?.Value switch
+            title = x.CssSelectElement("a p")?.Value,
+            value = double.Parse(x.CssSelectElement(".exchange-dolar-amount")?.Value.Trim().TrimStart('$') ?? "0", NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands, CultureInfo.GetCultureInfo("es-AR")),
+            url = x.CssSelectElement("a p")?.Value switch
             {
-                string s when s.Contains("Bco") => "/oficial",
-                string s when s.Contains("Libre") => "/blue",
-                string s when s.Contains("Solidario") => "/tarjeta",
-                string s when s.Contains("liqui") => "/ccl",
-                string s when s.Contains("MEP") => "/mep",
+                string s when s.Contains("BANCO", StringComparison.OrdinalIgnoreCase) => "/oficial",
+                string s when s.Contains("LIBRE", StringComparison.OrdinalIgnoreCase) => "/blue",
+                string s when s.Contains("TURISTA", StringComparison.OrdinalIgnoreCase) => "/tarjeta",
+                string s when s.Contains("LIQUI", StringComparison.OrdinalIgnoreCase) => "/ccl",
+                string s when s.Contains("MEP", StringComparison.OrdinalIgnoreCase) => "/mep",
                 _ => "/"
             }
         })
