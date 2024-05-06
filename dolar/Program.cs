@@ -21,15 +21,24 @@ var app = builder.Build();
 
 app.UseRouting();
 
-app.MapGet("/", async (IHttpClientFactory http, HttpContext context) =>
+app.MapGet("/", async (IHttpClientFactory http, HttpContext context, ILogger<Program> logger) =>
 {
     var (status, quotes) = await GetQuotesAsync(http.CreateClient("http"));
-    if (status != HttpStatusCode.OK || quotes == null)
+    if (status != HttpStatusCode.OK)
+    {
+        logger.LogWarning("Could not fetch webpage from Infobae. Status: {status}", status);
         return Results.StatusCode((int)status);
+    }
+
+    if (!(quotes?.Count > 0))
+    {
+        logger.LogWarning("No quotes found in Infobae webpage.");
+        return Results.NotFound();
+    }
 
     var id = context.Request.Query.Keys.FirstOrDefault(x => x != "badge");
     var quote = default(Quote);
-    
+
     if (id != null && !quotes.TryGetValue(id, out quote))
         return Results.NotFound("Invalid dolar kind. Must be one of: oficial/blue/tarjeta/mep/ccl.");
 
@@ -71,11 +80,9 @@ app.Run();
 async Task<(HttpStatusCode, Dictionary<string, Quote>?)> GetQuotesAsync(HttpClient http)
 {
     var response = await http.GetAsync("https://www.infobae.com/economia/");
-
     if (!response.IsSuccessStatusCode)
         return (response.StatusCode, default);
 
-    response.EnsureSuccessStatusCode();
     var doc = await response.Content.ReadAsDocumentAsync();
     var exchange = doc.CssSelectElement(".exchange-dolar-container");
     if (exchange == null)
