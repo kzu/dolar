@@ -1,0 +1,31 @@
+﻿name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🤘 checkout
+        uses: actions/checkout@v4
+
+      - name: 🙏 build
+        run: dotnet build --configuration Release --output ./output
+      
+      - name: 🔓 azure login
+        uses: azure/login@v1
+        if: github.ref == 'refs/heads/main'
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 🚀 deploy
+        uses: Azure/functions-action@v1
+        with:
+          app-name: 'lechugas'
+          package: './output'
+          
