@@ -1,4 +1,4 @@
-# dolar container app
+# dolar function app
 
 A minimalistic Azure functions app that exposes the USD > ARS echange rates (yeah, we have more than one `¯\_ (ツ)_/¯`).
 
