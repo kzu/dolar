@@ -13,7 +13,7 @@ public class Strategies
     [InlineData(DolarType.Billete, "2024-05-14", 864, 904)]
     public void Dolar(DolarType type, string date, double buy, double sell)
     {
-        var strategy = DolarStrategy.Create(type);
+        var strategy = DolarStrategy.Create(type, new Progress<string>());
         var rate = strategy.GetRate(DateOnly.ParseExact(date, "yyyy-MM-dd"));
         Assert.NotNull(rate);
         Assert.Equal(buy, rate!.Buy);
