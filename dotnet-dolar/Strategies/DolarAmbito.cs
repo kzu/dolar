@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using Polly;
@@ -40,17 +41,17 @@ public class DolarAmbito(DolarType type) : IDolarStrategy
 
             var json = client.GetFromJsonAsync<List<string[]>>($"https://mercados.ambito.com/{path}/historico-general/{from}/{to}").Result;
             if (json == null || json.Count < 2)
-                return Array.Empty<string>();
+                return [];
 
-            return json[1];
+            return json;
         });
 
-        if (data.Length == 0)
-            return null;
-
-        var buy = double.Parse(data[1], culture);
-        var sell = data.Length == 2 ? buy : double.Parse(data[2], culture);
-
-        return new Rate(date, buy, sell);
+        return data.Skip(1).Where(x => x.Length >= 2)
+            .Select(x => new Rate(
+                DateOnly.ParseExact(x[0], "dd/MM/yyyy"),
+                double.Parse(x[1], culture),
+                x.Length == 2 ? double.Parse(x[1], culture) : double.Parse(x[2], culture)))
+            .OrderBy(x => x.Date)
+            .FirstOrDefault(x => x.Date >= date);
     }
 }
