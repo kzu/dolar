@@ -138,7 +138,7 @@ partial class DolarCommand : AsyncCommand<DolarCommand.DolarSettings>
                 if (Sheet == -1)
                 {
                     // Enumerate sheets, get title/caption and show a prompt selection
-                    var sheets = xls.Worksheets.Select((ws, i) => (ws.Name, Index: i)).ToList();
+                    var sheets = xls.Worksheets.Select((ws, i) => (ws.Name, Index: i + 1)).ToList();
                     if (sheets.Count == 1)
                     {
                         Sheet = 1;
@@ -148,7 +148,7 @@ partial class DolarCommand : AsyncCommand<DolarCommand.DolarSettings>
                         var selected = AnsiConsole.Prompt(new SelectionPrompt<(string Name, int Index)>()
                             .Title("Seleccionar hoja:")
                             .AddChoices(sheets));
-                        Sheet = selected.Index + 1;
+                        Sheet = selected.Index;
                     }
                 }
 
@@ -157,19 +157,19 @@ partial class DolarCommand : AsyncCommand<DolarCommand.DolarSettings>
                 if (DateColumn == -1)
                 {
                     // Assume first row is header, offer to select from header row
-                    var headers = ws.Row(1).Cells().Select((c, i) => (Name: c.GetString(), Index: i)).ToList();
+                    var headers = ws.Row(1).Cells().Select((c, i) => (Name: c.GetString(), Index: i + 1)).ToList();
                     var selected = AnsiConsole.Prompt(new SelectionPrompt<(string Name, int Index)>()
                         .Title("Seleccionar columna de fecha:")
                         .AddChoices(headers));
 
-                    DateColumn = selected.Index + 1;
+                    DateColumn = selected.Index;
                 }
 
                 if (RateColumn == -1)
                 {
                     // Assume first row is header, offer to select from header row
-                    var headers = ws.Row(1).Cells().Select((c, i) => (Name: c.GetString(), Index: i)).ToList();
-                    headers.Add(($"TC {Type}", headers.Count));
+                    var headers = ws.Row(1).Cells().Select((c, i) => (Name: c.GetString(), Index: i + 1)).ToList();
+                    headers.Add(($"{Type} {Operation}", headers.Count + 1));
                     var selected = AnsiConsole.Prompt(new SelectionPrompt<(string Name, int Index)>()
                         .Title("Seleccionar columna de cotizacion:")
                         .AddChoices(headers));
@@ -177,7 +177,7 @@ partial class DolarCommand : AsyncCommand<DolarCommand.DolarSettings>
                     // If we selected the last item, it's the new column, add it to the worksheet
                     if (selected.Index == headers.Count - 1)
                     {
-                        ws.Cell(1, selected.Index + 1).Value = selected.Name;
+                        ws.Cell(1, selected.Index).Value = selected.Name;
                         xls.Save();
                     }
 
