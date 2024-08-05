@@ -42,7 +42,7 @@
 
   <Target Name="RenderHelp" AfterTargets="Build">
     <WriteLinesToFile Lines="```shell" Overwrite="true" File="help.md" ContinueOnError="true" />
-    <Exec Command="dotnet run --no-build -- --help &gt;&gt; help.md" EnvironmentVariables="NO_COLOR=true" ContinueOnError="true" />
+    <Exec Command="dotnet run --no-build -- --help &gt;&gt; help.md" EnvironmentVariables="NO_COLOR=true;HELP=true" ContinueOnError="true" />
     <WriteLinesToFile Lines="```" Overwrite="false" File="help.md" ContinueOnError="true" />
   </Target>
 
