@@ -16,6 +16,7 @@ jobs:
 
       - name: 🙏 build
         run: dotnet build --configuration Release --output ./output
+        working-directory: dolar
       
       - name: 🔓 azure login
         uses: azure/login@v1
