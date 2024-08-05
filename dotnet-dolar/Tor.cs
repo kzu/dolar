@@ -4,11 +4,10 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Knapcode.TorSharp;
-using Spectre.Console;
 
 namespace Devlooped;
 
-public class Tor : IDisposable
+public class Tor(IProgress<string>? progress = null) : IDisposable
 {
     TorSharpProxy? proxy;
     TorSharpSettings settings = new()
@@ -31,7 +30,7 @@ public class Tor : IDisposable
         },
     };
 
-    public async Task StartAsync() //=> await AnsiConsole.Status().StartAsync("Fetching Tor tools", async ctx =>
+    public async Task StartAsync()
     {
         var fetcher = new TorSharpToolFetcher(settings, new HttpClient(new HttpClientHandler()
         {
@@ -39,17 +38,18 @@ public class Tor : IDisposable
             ServerCertificateCustomValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true,
         }));
 
+        progress?.Report("Actualizando herramientas de anonimización");
         var updates = await fetcher.CheckForUpdatesAsync();
         await fetcher.FetchAsync(updates);
 
         proxy = new TorSharpProxy(settings);
-        //ctx.Status("Configuring Tor");
         await proxy.ConfigureAsync();
-        //ctx.Status("Starting Tor");
-        await proxy.StartAsync();
-    }//);
 
-    public async Task RestartAsync()// => await AnsiConsole.Status().StartAsync("Restarting Tor", async ctx =>
+        progress?.Report("Iniciando anonimización");
+        await proxy.StartAsync();
+    }
+
+    public async Task RestartAsync()
     {
         if (proxy != null)
         {
@@ -57,16 +57,12 @@ public class Tor : IDisposable
             return;
         }
 
-        proxy?.Stop();
-        proxy?.Dispose();
+        progress?.Report("Iniciando anonimización");
 
         proxy = new TorSharpProxy(settings);
-        //ctx.Status("Configuring Tor");
         await proxy.ConfigureAsync();
-        //ctx.Status("Starting Tor");
         await proxy.StartAsync();
-    }//);
-
+    }
 
     public void Dispose()
     {

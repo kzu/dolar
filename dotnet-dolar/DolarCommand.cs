@@ -19,53 +19,62 @@ partial class DolarCommand : AsyncCommand<DolarCommand.DolarSettings>
     public override async Task<int> ExecuteAsync(CommandContext context, DolarSettings settings) => 
         await AnsiConsole.Status().StartAsync($"Abriendo {Path.GetFileName(settings.FilePath)}", async ctx =>
         {
+            var progress = new Progress<string>(value => ctx.Status = value);
+
             using var xls = new XLWorkbook(settings.FilePath);
             var ws = xls.Worksheet(settings.Sheet);
-            var rates = new Dictionary<DateOnly, double>();
-            var strategy = DolarStrategy.Create(settings.Type!.Value);
+            var strategy = DolarStrategy.Create(settings.Type!.Value, progress);
+            var cache = new RateCache(strategy.Id, settings.Type.Value, settings.Operation!.Value);
+            var rates = await cache.ReadAsync();
 
-            var row = 1;
-            while (true)
+            try
             {
-                var cell = ws.Cell(row, settings.DateColumn);
-                if (cell.IsEmpty())
-                    break;
-
-                // Skip first row if we can't parse a date to allow for a header row
-                if (!DateOnly.TryParseExact(cell.GetText(), "dd/MM/yyyy", out var date) && row == 1)
+                var row = 1;
+                while (true)
                 {
+                    var cell = ws.Cell(row, settings.DateColumn);
+                    if (cell.IsEmpty())
+                        break;
+
+                    // Skip first row if we can't parse a date to allow for a header row
+                    if (!DateOnly.TryParseExact(cell.GetText(), "dd/MM/yyyy", out var date) && row == 1)
+                    {
+                        row++;
+                        continue;
+                    }
+
+                    if (rates.TryGetValue(date, out var saved))
+                    {
+                        ws.Cell(row, settings.RateColumn).Value = saved;
+                        ctx.Status = $"{date:yyyy-MM-dd} => [grey]{saved}[/]";
+                        row++;
+                        continue;
+                    }
+
+                    var rate = strategy.GetRate(date);
+                    if (rate == null)
+                    {
+                        ctx.Status = $"{date:yyyy-MM-dd} => [red]No disponible[/]";
+                        row++;
+                        continue;
+                    }
+
+                    var value = settings.Operation == DolarOperation.Compra ? rate.Buy :
+                                settings.Operation == DolarOperation.Venta ? rate.Sell :
+                                (rate.Buy + rate.Sell) / 2;
+
+                    rates.Add(date, value);
+                    ctx.Status = $"{date:yyyy-MM-dd} => [lime]{value}[/]";
+                    ws.Cell(row, settings.RateColumn).Value = value;
+
                     row++;
-                    continue;
                 }
-
-                if (rates.TryGetValue(date, out var saved))
-                {
-                    ws.Cell(row, settings.RateColumn).Value = saved;
-                    ctx.Status = $"{date:yyyy-MM-dd} => [grey]{saved}[/]";
-                    row++;
-                    continue;
-                }
-
-                var rate = strategy.GetRate(date);
-                if (rate == null)
-                {
-                    ctx.Status = $"{date:yyyy-MM-dd} => [red]No disponible[/]";
-                    row++;
-                    continue;
-                }
-
-                var value = settings.Operation == DolarOperation.Compra ? rate.Buy :
-                            settings.Operation == DolarOperation.Venta ? rate.Sell :
-                            (rate.Buy + rate.Sell) / 2;
-
-                rates.Add(date, value);
-                ctx.Status = $"{date:yyyy-MM-dd} => [lime]{value}[/]";
-                ws.Cell(row, settings.RateColumn).Value = value;
-
-                row++;
             }
-
-            xls.Save();
+            finally
+            {
+                xls.Save();
+                cache.WriteAsync(rates);
+            }
 
             return 0;
         });

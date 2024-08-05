@@ -7,7 +7,7 @@ using Polly;
 
 namespace Devlooped;
 
-public class DolarAmbito(DolarType type): IDolarStrategy
+public class DolarAmbito(DolarType type) : IDolarStrategy
 {
     static readonly HttpClient client = new();
     static readonly Policy policy = Policy.Handle<Exception>().WaitAndRetry(2, _ => TimeSpan.FromSeconds(1));
@@ -17,6 +17,8 @@ public class DolarAmbito(DolarType type): IDolarStrategy
     {
         client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
     }
+
+    public string Id => "ambito";
 
     public Rate? GetRate(DateOnly date)
     {
@@ -35,6 +37,7 @@ public class DolarAmbito(DolarType type): IDolarStrategy
         // retry the web request in case of transient errors
         var data = policy.Execute(() =>
         {
+
             var json = client.GetFromJsonAsync<List<string[]>>($"https://mercados.ambito.com/{path}/historico-general/{from}/{to}").Result;
             if (json == null || json.Count < 2)
                 return Array.Empty<string>();

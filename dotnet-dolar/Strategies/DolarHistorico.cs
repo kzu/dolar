@@ -9,6 +9,8 @@ namespace Devlooped;
 
 public class DolarHistorico(CultureInfo culture, Policy policy) : IDolarStrategy
 {
+    public string Id => "historico";
+
     public Rate GetRate(DateOnly date)
     {
         var slug = date.ToString("dd-MMMM-yyyy", culture);

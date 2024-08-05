@@ -9,7 +9,7 @@ using Polly;
 
 namespace Devlooped;
 
-public class DolarBcra(bool divisa = true) : IDolarStrategy, IDisposable
+public class DolarBcra(bool divisa = true, IProgress<string>? progress = null) : IDolarStrategy, IDisposable
 {
     static readonly Policy policy = Policy.Handle<Exception>().WaitAndRetryForever(_ => TimeSpan.FromSeconds(1));
     static readonly CultureInfo culture = new("es-AR");
@@ -22,11 +22,13 @@ public class DolarBcra(bool divisa = true) : IDolarStrategy, IDisposable
         Proxy = new WebProxy(new Uri("socks5://localhost:1338"))
     };
 
+    public string Id => "bcra";
+
     public Rate? GetRate(DateOnly date)
     {
         if (tor == null)
         {
-            tor = new Tor();
+            tor = new Tor(progress);
             tor.StartAsync().Wait();
         }
 
