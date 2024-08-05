@@ -14,7 +14,13 @@ public class DolarBcra(bool divisa = true) : IDolarStrategy, IDisposable
     static readonly Policy policy = Policy.Handle<Exception>().WaitAndRetryForever(_ => TimeSpan.FromSeconds(1));
     static readonly CultureInfo culture = new("es-AR");
 
+    const int MaxRequests = 5;
+    int requests;
     Tor? tor;
+    HttpClientHandler handler = new HttpClientHandler
+    {
+        Proxy = new WebProxy(new Uri("socks5://localhost:1338"))
+    };
 
     public Rate? GetRate(DateOnly date)
     {
@@ -24,6 +30,12 @@ public class DolarBcra(bool divisa = true) : IDolarStrategy, IDisposable
             tor.StartAsync().Wait();
         }
 
+        if (++requests > MaxRequests)
+        {
+            tor.RestartAsync().Wait();
+            requests = 0;
+        }
+
         var slug = date.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
         var id = divisa ? "monedas" : "billetes";
         var url = $"https://www.bna.com.ar/Cotizador/HistoricoPrincipales?id={id}&fecha={slug}&filtroEuro=0&filtroDolar=1";
@@ -31,10 +43,7 @@ public class DolarBcra(bool divisa = true) : IDolarStrategy, IDisposable
         // retry the web request in case of transient errors
         var page = policy.Execute(() =>
         {
-            using var client = new HttpClient(new HttpClientHandler
-            {
-                Proxy = new WebProxy(new Uri("socks5://localhost:1338"))
-            });
+            using var client = new HttpClient(handler, false);
             var response = client.GetAsync(url).Result;
             response.EnsureSuccessStatusCode();
             return HtmlDocument.Load(response.Content.ReadAsStream());
