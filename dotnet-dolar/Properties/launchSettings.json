@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "dotnet-dolar": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Users\\dev\\Downloads\\temp.xlsx\""
+    }
+  }
+}

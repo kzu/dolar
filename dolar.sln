@@ -5,6 +5,10 @@ VisualStudioVersion = 17.3.32519.111
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dolar", "dolar\dolar.csproj", "{99483100-266C-4487-A81A-94CA1AEC3A1B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnet-dolar", "dotnet-dolar\dotnet-dolar.csproj", "{2117F2A4-01E6-4266-9180-E128743BA4E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{4278249A-03F9-4D93-BB72-A8BFA928F4EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{99483100-266C-4487-A81A-94CA1AEC3A1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99483100-266C-4487-A81A-94CA1AEC3A1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99483100-266C-4487-A81A-94CA1AEC3A1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2117F2A4-01E6-4266-9180-E128743BA4E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2117F2A4-01E6-4266-9180-E128743BA4E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2117F2A4-01E6-4266-9180-E128743BA4E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2117F2A4-01E6-4266-9180-E128743BA4E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4278249A-03F9-4D93-BB72-A8BFA928F4EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4278249A-03F9-4D93-BB72-A8BFA928F4EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4278249A-03F9-4D93-BB72-A8BFA928F4EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4278249A-03F9-4D93-BB72-A8BFA928F4EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
