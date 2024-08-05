@@ -56,7 +56,7 @@ if (await updates is string update)
 {
     AnsiConsole.MarkupLine(update);
 
-    if (Environment.OSVersion.Platform == PlatformID.Win32NT && 
+    if (Environment.OSVersion.Platform == PlatformID.Win32NT &&
         AnsiConsole.Confirm("Actualizar automáticamente?") == true)
     {
         ScheduleUpdate();
@@ -79,8 +79,8 @@ static async Task<string?> CheckUpdates(string[] args)
     var providers = Repository.Provider.GetCoreV3();
     var localVersion = new NuGetVersion(ThisAssembly.Project.Version);
     var repository = new SourceRepository(new PackageSource(
-        localVersion.IsPrerelease || localVersion.Major == 42 ? 
-        "https://pkg.kzu.app/index.json" : 
+        localVersion.IsPrerelease || localVersion.Major == 42 ?
+        "https://pkg.kzu.app/index.json" :
         "https://api.nuget.org/v3/index.json"), providers);
 
     var resource = await repository.GetResourceAsync<PackageMetadataResource>();
