@@ -1,0 +1,15 @@
+<Project>
+  <!-- Extend Directory.Build.props -->
+
+  <PropertyGroup Label="NuGet">
+    <PackageTags>dotnet roslyn</PackageTags>
+    <PackOnBuild>true</PackOnBuild>
+    <SignAssembly>false</SignAssembly>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RestoreSources>https://api.nuget.org/v3/index.json;https://pkg.kzu.io/index.json;</RestoreSources>
+
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+    <NoWarn>MSB3277;$(NoWarn)</NoWarn>
+  </PropertyGroup>
+
+</Project>

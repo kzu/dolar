@@ -15,8 +15,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🙏 build
-        run: dotnet build --configuration Release --output ./../output
-        working-directory: dolar
+        run: dotnet build --configuration Release --output ./../../output
+        working-directory: src/api
       
       - name: 🔓 azure login
         uses: azure/login@v1
