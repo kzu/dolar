@@ -45,7 +45,7 @@ class XhtmlContentReader : XmlWrappingReader
         while (moved && (IsXmlNs || IsLocalXmlNs))
             moved = MoveToNextAttribute();
 
-        if (!moved) 
+        if (!moved)
             base.MoveToElement();
 
         return moved;

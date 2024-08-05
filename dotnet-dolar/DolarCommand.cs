@@ -16,7 +16,7 @@ namespace Devlooped;
 
 partial class DolarCommand : AsyncCommand<DolarCommand.DolarSettings>
 {
-    public override async Task<int> ExecuteAsync(CommandContext context, DolarSettings settings) => 
+    public override async Task<int> ExecuteAsync(CommandContext context, DolarSettings settings) =>
         await AnsiConsole.Status().StartAsync($"Abriendo {Path.GetFileName(settings.FilePath)}", async ctx =>
         {
             var progress = new Progress<string>(value => ctx.Status = value);
@@ -111,8 +111,8 @@ partial class DolarCommand : AsyncCommand<DolarCommand.DolarSettings>
 
         public override ValidationResult Validate()
         {
-            if (string.IsNullOrEmpty(FilePath) && 
-                Directory.EnumerateFiles(".", "*.xlsx").ToList() is var files && 
+            if (string.IsNullOrEmpty(FilePath) &&
+                Directory.EnumerateFiles(".", "*.xlsx").ToList() is var files &&
                 files.Count == 1)
             {
                 FilePath = files[0];

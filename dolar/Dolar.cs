@@ -1,11 +1,11 @@
-﻿using System.Net;
+﻿using System.Globalization;
+using System.Net;
+using System.Text.Json.Serialization;
+using Devlooped.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using Devlooped.Web;
-using System.Globalization;
-using System.Text.Json.Serialization;
 
 public class Dolar(ILogger<Dolar> logger, IHttpClientFactory http)
 {
@@ -71,7 +71,7 @@ public class Dolar(ILogger<Dolar> logger, IHttpClientFactory http)
             {
                 title = x.CssSelectElement("a p")?.Value,
                 value = double.Parse(
-                    x.CssSelectElement(".exchange-dolar-amount")?.Value.Trim().TrimStart('$') ?? "0", 
+                    x.CssSelectElement(".exchange-dolar-amount")?.Value.Trim().TrimStart('$') ?? "0",
                     NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands, CultureInfo.GetCultureInfo("es-AR")),
                 url = x.CssSelectElement("a p")?.Value switch
                 {

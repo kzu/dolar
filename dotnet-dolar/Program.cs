@@ -1,14 +1,14 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using Devlooped;
-using Spectre.Console;
-using Spectre.Console.Cli;
+using NuGet.Configuration;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
-using System;
-using NuGet.Configuration;
+using Spectre.Console;
+using Spectre.Console.Cli;
 
 var app = new CommandApp<DolarCommand>();
 

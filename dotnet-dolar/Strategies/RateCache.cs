@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using Spectre.Console;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Spectre.Console;
 
 namespace Devlooped;
 
@@ -45,8 +45,8 @@ public class RateCache(string provider, DolarType type, DolarOperation operation
         try
         {
             Directory.CreateDirectory(baseDir);
-            await File.WriteAllTextAsync(path, JsonSerializer.Serialize(data, 
-                new JsonSerializerOptions(JsonSerializerDefaults.Web) {  WriteIndented = true }));
+            await File.WriteAllTextAsync(path, JsonSerializer.Serialize(data,
+                new JsonSerializerOptions(JsonSerializerDefaults.Web) { WriteIndented = true }));
         }
         catch (Exception e)
         {
